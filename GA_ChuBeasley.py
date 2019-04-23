@@ -8,3 +8,8 @@ xmax = 2
 ymin = -.5
 ymax = 1.8
 
+# Size of population
+pop_size = 10
+
+# Maximum number of generations
+gen_max = 10
