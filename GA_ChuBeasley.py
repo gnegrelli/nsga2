@@ -82,6 +82,19 @@ while len(parent) < 2:
     else:
         parent.append(specimens[champion2][1])
 
-gene_p = [bin(parent[0][0])[2:] + bin(parent[0][1])[2:], bin(parent[1][0])[2:] + bin(parent[1][1])[2:]]
+gene_p = [bin(parent[0][0])[2:].zfill(20) + bin(parent[0][1])[2:].zfill(20),
+          bin(parent[1][0])[2:].zfill(20) + bin(parent[1][1])[2:].zfill(20)]
 
+if len(gene_p[0]) == len(gene_p[1]):
+    pivot = np.random.randint(len(gene_p[0]))
+    if np.random.rand() > 0.5:
+        child = gene_p[0][:pivot] + gene_p[1][pivot:]
+    else:
+        child = gene_p[1][:pivot] + gene_p[0][pivot:]
+else:
+    "DEU PAU!!!!!"
+    exit()
 
+for i in gene_p:
+    print i
+print child
