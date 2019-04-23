@@ -57,4 +57,29 @@ for spec in specimens:
 # Sorting specimens for best to worst
 specimens.sort(reverse=True)
 
+# List of selected parents
+parent = []
 
+# Selection process via tournament
+while len(parent) < 2:
+
+    # Choosing champions to duel. The while loop prevents to choose the same champion twice
+    champion1 = np.random.randint(pop_size)
+    while champion1 in parent:
+        champion1 = np.random.randint(pop_size)
+
+    champion2 = np.random.randint(pop_size)
+    while champion2 == champion1 or champion2 in parent:
+        champion2 = np.random.randint(pop_size)
+
+    # Tournament
+    if specimens[champion1][0] > specimens[champion2][0]:
+        parent.append(champion1)
+    elif specimens[champion2][0] > specimens[champion1][0]:
+        parent.append(champion2)
+    elif np.random.rand() >= 0.5:
+        parent.append(champion1)
+    else:
+        parent.append(champion2)
+
+print parent
