@@ -26,7 +26,7 @@ ymax = 1.8
 pop_size = 10
 
 # Maximum number of generations
-gen_max = 10
+max_generation = 10
 
 # Current generation
 gen = 0
@@ -74,12 +74,14 @@ while len(parent) < 2:
 
     # Tournament
     if specimens[champion1][0] > specimens[champion2][0]:
-        parent.append(champion1)
+        parent.append(specimens[champion1][1])
     elif specimens[champion2][0] > specimens[champion1][0]:
-        parent.append(champion2)
+        parent.append(specimens[champion2][1])
     elif np.random.rand() >= 0.5:
-        parent.append(champion1)
+        parent.append(specimens[champion1][1])
     else:
-        parent.append(champion2)
+        parent.append(specimens[champion2][1])
 
-print parent
+gene_p = [bin(parent[0][0])[2:] + bin(parent[0][1])[2:], bin(parent[1][0])[2:] + bin(parent[1][1])[2:]]
+
+
