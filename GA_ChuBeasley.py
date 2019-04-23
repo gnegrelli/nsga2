@@ -24,10 +24,7 @@ specimens = []
 for i in range(pop_size):
     a = np.random.randint(10.**6)
     b = np.random.randint(10.**6)
-    while [0, a, b] in specimens:
+    while [0, (a, b)] in specimens:
         a = np.random.randint(10.**6)
         b = np.random.randint(10.**6)
-    specimens.append([0, a, b])
-
-for spec in specimens:
-    print spec
+    specimens.append([0, (a, b)])
