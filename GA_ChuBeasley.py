@@ -34,6 +34,9 @@ gen = 0
 # Precision
 digits = 6
 
+# MUtation tax
+mutax = 0.1
+
 # List of individuals
 specimens = []
 
@@ -85,16 +88,26 @@ while len(parent) < 2:
 gene_p = [bin(parent[0][0])[2:].zfill(20) + bin(parent[0][1])[2:].zfill(20),
           bin(parent[1][0])[2:].zfill(20) + bin(parent[1][1])[2:].zfill(20)]
 
+# Crossover to generate child
 if len(gene_p[0]) == len(gene_p[1]):
     pivot = np.random.randint(len(gene_p[0]))
     if np.random.rand() > 0.5:
-        child = gene_p[0][:pivot] + gene_p[1][pivot:]
+        child = list(gene_p[0][:pivot] + gene_p[1][pivot:])
     else:
-        child = gene_p[1][:pivot] + gene_p[0][pivot:]
+        child = list(gene_p[1][:pivot] + gene_p[0][pivot:])
 else:
     "DEU PAU!!!!!"
     exit()
 
-for i in gene_p:
-    print i
-print child
+print "Pre-mutation:\t", ''.join(child)
+
+# Mutation
+for i in range(len(child)):
+    if np.random.rand() <= mutax:
+        if child[i] == '0':
+            child[i] = '1'
+        else:
+            child[i] = '0'
+
+print "Post-mutation:\t", ''.join(child)
+
