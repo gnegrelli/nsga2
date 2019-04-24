@@ -26,6 +26,9 @@ pop_size = 10
 # Maximum number of generations
 max_generation = 10
 
+# Maximum number of consecutive generations with no change in population
+max_unchange = 5
+
 # Current generation
 gen = 0
 
@@ -60,6 +63,12 @@ for spec in specimens:
 
 # Sorting specimens for best to worst
 specimens.sort(reverse=True)
+
+print "Initial Generation"
+print 30*"-"
+for spec in specimens:
+    print "%d: %s" % (specimens.index(spec) + 1, spec[1])
+print "\n\n"
 
 # Initiate child as one specimen that already exists, forcing code to enter the following 'while' loop
 child = specimens[0][1]
@@ -106,7 +115,7 @@ while child in zip(*specimens)[1]:
         "DEU PAU!!!!!"
         exit()
 
-    print "Pre-mutation:\t", ''.join(child)
+    # print "Pre-mutation:\t", ''.join(child)
 
     # Mutation
     for i in range(len(child)):
@@ -116,7 +125,7 @@ while child in zip(*specimens)[1]:
             else:
                 child[i] = '0'
 
-    print "Post-mutation:\t", ''.join(child)
+    # print "Post-mutation:\t", ''.join(child)
 
     # Convert child from binary to int
     child = (int('0b' + ''.join(child[:20]), 2), int('0b' + ''.join(child[20:]), 2))
@@ -131,3 +140,12 @@ if specimens[-1][0] >= specimens[-2][0]:
 else:
     specimens = specimens[:pop_size]
     unchange += 1
+
+# Add counter of generations
+gen += 1
+
+print "Generation #%d" % gen
+print 30*"-"
+for spec in specimens:
+    print "%d: %s" % (specimens.index(spec) + 1, spec[1])
+print "\n\n"
