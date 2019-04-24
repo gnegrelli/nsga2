@@ -32,13 +32,13 @@ gen = 0
 # Precision
 digits = 6
 
-# MUtation tax
+# Mutation tax
 mutax = 0.1
 
 # List of individuals
 specimens = []
 
-# Creating unique individuals
+# Creating initial population with unique individuals
 for i in range(pop_size):
     a = np.random.randint(10**digits)
     b = np.random.randint(10**digits)
@@ -118,6 +118,5 @@ while child in zip(*specimens)[1]:
     # Convert child from binary to int
     child = (int('0b' + ''.join(child[:20]), 2), int('0b' + ''.join(child[20:]), 2))
 
-print [0, child]
-for i in specimens:
-    print i
+specimens.append([fitness(child, digits, xmin, xmax, ymin, ymax,), child])
+specimens = sorted(specimens, reverse=True)[:pop_size]
