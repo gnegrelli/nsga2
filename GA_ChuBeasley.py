@@ -12,6 +12,9 @@ def fitness(crom, n, x1_l, x1_h, x2_l, x2_h):
     return x1*np.sin(10*np.pi*x1) + x2*np.cos(3*np.pi*(x2**2))
 
 
+# Flags
+print_gen = False
+
 # Limits of x
 xmin = -1
 xmax = 2
@@ -32,12 +35,11 @@ max_unchange = 10
 # Precision
 digits = 6
 
-# Number of bits needed
-bits = int(np.ceil(np.log2(10**digits)))
-print bits
-
 # Mutation tax
 mutax = 0.1
+
+# Number of bits needed
+bits = int(np.ceil(np.log2(10**digits)))
 
 # Current generation
 gen = 0
@@ -68,11 +70,12 @@ for spec in specimens:
 # Sorting specimens for best to worst
 specimens.sort(reverse=True)
 
-print "Initial Generation"
-print 30*"-"
-for spec in specimens:
-    print "%d: %s" % (specimens.index(spec) + 1, spec[1])
-print "\n\n"
+if print_gen:
+    print "Initial Generation"
+    print 30*"-"
+    for spec in specimens:
+        print "%d: %s" % (specimens.index(spec) + 1, spec[1])
+    print "\n\n"
 
 while gen < max_generation and unchange < max_unchange:
 
@@ -150,16 +153,15 @@ while gen < max_generation and unchange < max_unchange:
     # Add counter of generations
     gen += 1
 
-    print "Generation #%d" % gen
-    print 30*"-"
-    for spec in specimens:
-        if spec[1] == child:
-            print "\x1b[;32;49m%d: %.4f, %.4f \x1b[0m" % (specimens.index(spec) + 1, spec[1][0]/(2.**bits)*(xmax-xmin) + xmin, spec[1][1]/(2.**bits)*(ymax-ymin) + ymin)
-        else:
-            print "%d: %.4f, %.4f" % (specimens.index(spec) + 1, spec[1][0]/(2.**bits)*(xmax-xmin) + xmin, spec[1][1]/(2.**bits)*(ymax-ymin) + ymin)
-    print "\n\n"
-
-print specimens
+    if print_gen:
+        print "Generation #%d" % gen
+        print 30*"-"
+        for spec in specimens:
+            if spec[1] == child:
+                print "\x1b[;32;49m%d: %.4f, %.4f \x1b[0m" % (specimens.index(spec) + 1, spec[1][0]/(2.**bits)*(xmax-xmin) + xmin, spec[1][1]/(2.**bits)*(ymax-ymin) + ymin)
+            else:
+                print "%d: %.4f, %.4f" % (specimens.index(spec) + 1, spec[1][0]/(2.**bits)*(xmax-xmin) + xmin, spec[1][1]/(2.**bits)*(ymax-ymin) + ymin)
+        print "\n\n"
 
 print "Best value: %.4f, %.4f" % (specimens[0][1][0]/(2.**bits)*(xmax - xmin) + xmin, specimens[0][1][1]/(2.**bits)*(ymax - ymin) + ymin)
 print "Objective function: %.6f" % specimens[0][0]
