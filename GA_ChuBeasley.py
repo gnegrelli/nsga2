@@ -70,82 +70,87 @@ for spec in specimens:
     print "%d: %s" % (specimens.index(spec) + 1, spec[1])
 print "\n\n"
 
-# Initiate child as one specimen that already exists, forcing code to enter the following 'while' loop
-child = specimens[0][1]
+while gen < max_generation and unchange < max_unchange:
 
-# This loop prevents parent to generate a child that already exists on the population
-while child in zip(*specimens)[1]:
+    # Initiate child as one specimen that already exists, forcing code to enter the following 'while' loop
+    child = specimens[0][1]
 
-    # List of selected parents
-    parent = []
+    # This loop prevents parent to generate a child that already exists on the population
+    while child in zip(*specimens)[1]:
 
-    # Selection process via tournament
-    while len(parent) < 2:
+        # List of selected parents
+        parent = []
 
-        # Choosing champions to duel. The while loop prevents to choose the same champion twice
-        champion1 = np.random.randint(pop_size)
-        while champion1 in parent:
+        # Selection process via tournament
+        while len(parent) < 2:
+
+            # Choosing champions to duel. The while loop prevents to choose the same champion twice
             champion1 = np.random.randint(pop_size)
+            while champion1 in parent:
+                champion1 = np.random.randint(pop_size)
 
-        champion2 = np.random.randint(pop_size)
-        while champion2 == champion1 or champion2 in parent:
             champion2 = np.random.randint(pop_size)
+            while champion2 == champion1 or champion2 in parent:
+                champion2 = np.random.randint(pop_size)
 
-        # Tournament
-        if specimens[champion1][0] > specimens[champion2][0]:
-            parent.append(specimens[champion1][1])
-        elif specimens[champion2][0] > specimens[champion1][0]:
-            parent.append(specimens[champion2][1])
-        elif np.random.rand() >= 0.5:
-            parent.append(specimens[champion1][1])
-        else:
-            parent.append(specimens[champion2][1])
-
-    gene_p = [bin(parent[0][0])[2:].zfill(20) + bin(parent[0][1])[2:].zfill(20),
-              bin(parent[1][0])[2:].zfill(20) + bin(parent[1][1])[2:].zfill(20)]
-
-    # Crossover to generate child
-    if len(gene_p[0]) == len(gene_p[1]):
-        pivot = np.random.randint(len(gene_p[0]))
-        if np.random.rand() > 0.5:
-            child = list(gene_p[0][:pivot] + gene_p[1][pivot:])
-        else:
-            child = list(gene_p[1][:pivot] + gene_p[0][pivot:])
-    else:
-        "DEU PAU!!!!!"
-        exit()
-
-    # print "Pre-mutation:\t", ''.join(child)
-
-    # Mutation
-    for i in range(len(child)):
-        if np.random.rand() <= mutax:
-            if child[i] == '0':
-                child[i] = '1'
+            # Tournament
+            if specimens[champion1][0] > specimens[champion2][0]:
+                parent.append(specimens[champion1][1])
+            elif specimens[champion2][0] > specimens[champion1][0]:
+                parent.append(specimens[champion2][1])
+            elif np.random.rand() >= 0.5:
+                parent.append(specimens[champion1][1])
             else:
-                child[i] = '0'
+                parent.append(specimens[champion2][1])
 
-    # print "Post-mutation:\t", ''.join(child)
+        gene_p = [bin(parent[0][0])[2:].zfill(20) + bin(parent[0][1])[2:].zfill(20),
+                  bin(parent[1][0])[2:].zfill(20) + bin(parent[1][1])[2:].zfill(20)]
 
-    # Convert child from binary to int
-    child = (int('0b' + ''.join(child[:20]), 2), int('0b' + ''.join(child[20:]), 2))
+        # Crossover to generate child
+        if len(gene_p[0]) == len(gene_p[1]):
+            pivot = np.random.randint(len(gene_p[0]))
+            if np.random.rand() > 0.5:
+                child = list(gene_p[0][:pivot] + gene_p[1][pivot:])
+            else:
+                child = list(gene_p[1][:pivot] + gene_p[0][pivot:])
+        else:
+            "DEU PAU!!!!!"
+            exit()
 
-# Add child to last position of population
-specimens.append([fitness(child, digits, xmin, xmax, ymin, ymax,), child])
+        # print "Pre-mutation:\t", ''.join(child)
 
-# If child is better than worst individual, add it to population
-if specimens[-1][0] >= specimens[-2][0]:
-    specimens = sorted(specimens, reverse=True)[:pop_size]
-    unchange = 0
-else:
-    specimens = specimens[:pop_size]
-    unchange += 1
+        # Mutation
+        for i in range(len(child)):
+            if np.random.rand() <= mutax:
+                if child[i] == '0':
+                    child[i] = '1'
+                else:
+                    child[i] = '0'
 
-# Add counter of generations
-gen += 1
+        # print "Post-mutation:\t", ''.join(child)
 
-print "Generation #%d" % gen
-print 30*"-"
-for spec in specimens:
-    print "%d: %s" % (specimens.index(spec) + 1, spec[1])
-print "\n\n"
+        # Convert child from binary to int
+        child = (int('0b' + ''.join(child[:20]), 2), int('0b' + ''.join(child[20:]), 2))
+
+    # Add child to last position of population
+    specimens.append([fitness(child, digits, xmin, xmax, ymin, ymax,), child])
+
+    # If child is better than worst individual, add it to population
+    if specimens[-1][0] >= specimens[-2][0]:
+        specimens = sorted(specimens, reverse=True)[:pop_size]
+        unchange = 0
+    else:
+        specimens = specimens[:pop_size]
+        unchange += 1
+
+    # Add counter of generations
+    gen += 1
+
+    print "Generation #%d" % gen
+    print 30*"-"
+    for spec in specimens:
+        if spec[1] == child:
+            print "\x1b[;32;49m%d: %s \x1b[0m" % (specimens.index(spec) + 1, spec[1])
+        else:
+            print "%d: %s" % (specimens.index(spec) + 1, spec[1])
+    print "\n\n"
