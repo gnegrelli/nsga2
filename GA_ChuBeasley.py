@@ -21,25 +21,25 @@ ymin = -.5
 ymax = 1.8
 
 # Size of population
-pop_size = 10
+pop_size = 100
 
 # Maximum number of generations
-max_generation = 10
+max_generation = 100
 
 # Maximum number of consecutive generations with no change in population
-max_unchange = 5
-
-# Current generation
-gen = 0
-
-# Number of consecutive generations with no change in population
-unchange = 0
+max_unchange = 10
 
 # Precision
 digits = 6
 
 # Mutation tax
 mutax = 0.1
+
+# Current generation
+gen = 0
+
+# Number of consecutive generations with no change in population
+unchange = 0
 
 # List of individuals
 specimens = []
@@ -150,7 +150,10 @@ while gen < max_generation and unchange < max_unchange:
     print 30*"-"
     for spec in specimens:
         if spec[1] == child:
-            print "\x1b[;32;49m%d: %s \x1b[0m" % (specimens.index(spec) + 1, spec[1])
+            print "\x1b[;32;49m%d: %.4f, %.4f \x1b[0m" % (specimens.index(spec) + 1, spec[1][0]/(10.**digits)*(xmax-xmin) + xmin, spec[1][1]/(10.**digits)*(ymax-ymin) + ymin)
         else:
-            print "%d: %s" % (specimens.index(spec) + 1, spec[1])
+            print "%d: %.4f, %.4f" % (specimens.index(spec) + 1, spec[1][0]/(10.**digits)*(xmax-xmin) + xmin, spec[1][1]/(10.**digits)*(ymax-ymin) + ymin)
     print "\n\n"
+
+print "Best value: %.4f, %.4f" % (specimens[0][1][0]/(10.**digits)*(xmax - xmin) + xmin, specimens[0][1][1]/(10.**digits)*(ymax - ymin) + ymin)
+print "Objective function: %.6f" % specimens[0][0]
