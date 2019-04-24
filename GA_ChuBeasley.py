@@ -29,6 +29,9 @@ max_generation = 10
 # Current generation
 gen = 0
 
+# Number of consecutive generations with no change in population
+unchange = 0
+
 # Precision
 digits = 6
 
@@ -118,5 +121,13 @@ while child in zip(*specimens)[1]:
     # Convert child from binary to int
     child = (int('0b' + ''.join(child[:20]), 2), int('0b' + ''.join(child[20:]), 2))
 
+# Add child to last position of population
 specimens.append([fitness(child, digits, xmin, xmax, ymin, ymax,), child])
-specimens = sorted(specimens, reverse=True)[:pop_size]
+
+# If child is better than worst individual, add it to population
+if specimens[-1][0] >= specimens[-2][0]:
+    specimens = sorted(specimens, reverse=True)[:pop_size]
+    unchange = 0
+else:
+    specimens = specimens[:pop_size]
+    unchange += 1
