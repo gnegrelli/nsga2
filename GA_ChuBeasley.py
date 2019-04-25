@@ -14,6 +14,7 @@ def fitness(crom, n, x1_l, x1_h, x2_l, x2_h):
 
 # Flags
 print_gen = False
+local_search = True
 
 # Limits of x
 xmin = -1
@@ -145,6 +146,9 @@ while gen < max_generation and unchange < max_unchange:
                     child[i] = '0'
 
         # print "Post-mutation:\t", ''.join(child)
+
+        if local_search:
+            print 'Yeah'
 
         # Convert child from binary to int
         child = (int('0b' + ''.join(child[:bits]), 2), int('0b' + ''.join(child[bits:]), 2))
