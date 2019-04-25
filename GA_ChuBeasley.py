@@ -27,16 +27,19 @@ ymax = 1.8
 pop_size = 100
 
 # Maximum number of generations
-max_generation = 1000
+max_generation = 1
 
 # Maximum number of consecutive generations with no change in population
-max_unchange = 10
+max_unchange = 1
 
 # Precision
 digits = 6
 
 # Mutation tax
 mutax = 0.1
+
+# Crossover tax
+crosstax = 0.1
 
 # Number of bits needed
 bits = int(np.ceil(np.log2(10**digits)))
@@ -115,7 +118,14 @@ while gen < max_generation and unchange < max_unchange:
 
         # Crossover to generate child
         if len(gene_p[0]) == len(gene_p[1]):
-            pivot = np.random.randint(len(gene_p[0]))
+            
+            # Set pivot point. If pivot point is zero, one of the parents will be passed on
+            if np.random.rand() <= crosstax:
+                pivot = np.random.randint(len(gene_p[0]))
+            else:
+                pivot = 0
+            
+            # Create child
             if np.random.rand() > 0.5:
                 child = list(gene_p[0][:pivot] + gene_p[1][pivot:])
             else:
