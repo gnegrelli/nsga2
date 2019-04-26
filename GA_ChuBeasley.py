@@ -15,7 +15,7 @@ def fitness(crom, n, x1_l, x1_h, x2_l, x2_h):
 
 # Flags
 print_gen = False
-local_search = True
+local_search = not True
 
 # Limits of x
 xmin = -1
@@ -29,10 +29,10 @@ ymax = 1.8
 pop_size = 100
 
 # Maximum number of generations
-max_generation = 1
+max_generation = 1000
 
 # Maximum number of consecutive generations with no change in population
-max_unchange = 1
+max_unchange = 20
 
 # Precision
 digits = 6
@@ -85,10 +85,10 @@ if print_gen:
 while gen < max_generation and unchange < max_unchange:
 
     # Initiate children as one specimen that already exists, forcing code to enter the following 'while' loop
-    children = [0, specimens[0][1]]
+    children = [[0, specimens[0][1]]]
 
     # This loop prevents parents to generate a child that already exists on the population
-    while children[1] in zip(*specimens)[1]:
+    while children[0][1] in zip(*specimens)[1]:
 
         # List of selected parents
         parent = []
@@ -147,10 +147,11 @@ while gen < max_generation and unchange < max_unchange:
                     child[i] = '0'
 
         # print "Post-mutation:\t", ''.join(child)
-
-        if local_search:
-            # Convert original child from binary to int
-            children = [[0, (int('0b' + ''.join(child[:bits]), 2), int('0b' + ''.join(child[bits:]), 2))]]
+        
+        # Convert original child from binary to int
+        children = [[0, (int('0b' + ''.join(child[:bits]), 2), int('0b' + ''.join(child[bits:]), 2))]]        
+        
+        if local_search:            
             # Random generate slots to perform local change            
             houses = np.random.choice(len(child), 0.1*len(child))
             # Perform local changes on original child
@@ -166,7 +167,7 @@ while gen < max_generation and unchange < max_unchange:
         
         # Calculate fitness function for every children
         for kid in children:
-            kid[0] = fitness(kid[1], bits, xmin, xmax, ymin, ymax,)
+            kid[0] = fitness(kid[1], bits, xmin, xmax, ymin, ymax)
         
         # Sort children
         children.sort(reverse=True)
