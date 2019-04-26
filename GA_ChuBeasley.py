@@ -32,7 +32,7 @@ pop_size = 100
 max_generation = 1000
 
 # Maximum number of consecutive generations with no change in population
-max_unchange = 20
+max_unchange = max(3, int(.02*max_generation))
 
 # Precision
 digits = 6
