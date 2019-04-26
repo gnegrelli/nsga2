@@ -84,11 +84,11 @@ if print_gen:
 
 while gen < max_generation and unchange < max_unchange:
 
-    # Initiate child as one specimen that already exists, forcing code to enter the following 'while' loop
-    child = specimens[0][1]
+    # Initiate children as one specimen that already exists, forcing code to enter the following 'while' loop
+    children = [0, specimens[0][1]]
 
-    # This loop prevents parent to generate a child that already exists on the population
-    while child in zip(*specimens)[1]:
+    # This loop prevents parents to generate a child that already exists on the population
+    while children[1] in zip(*specimens)[1]:
 
         # List of selected parents
         parent = []
@@ -118,7 +118,7 @@ while gen < max_generation and unchange < max_unchange:
         gene_p = [bin(parent[0][0])[2:].zfill(bits) + bin(parent[0][1])[2:].zfill(bits),
                   bin(parent[1][0])[2:].zfill(bits) + bin(parent[1][1])[2:].zfill(bits)]
 
-        # Crossover to generate child
+        # Crossover to generate original child
         if len(gene_p[0]) == len(gene_p[1]):
             
             # Set pivot point. If pivot point is zero, one of the parents will be passed on
@@ -127,7 +127,7 @@ while gen < max_generation and unchange < max_unchange:
             else:
                 pivot = 0
             
-            # Create child
+            # Create original child
             if np.random.rand() > 0.5:
                 child = list(gene_p[0][:pivot] + gene_p[1][pivot:])
             else:
@@ -155,7 +155,6 @@ while gen < max_generation and unchange < max_unchange:
             houses = np.random.choice(len(child), 0.1*len(child))
             # Perform local changes on original child
             for pos in houses:
-                print pos
                 neighbour = copy.copy(child)
                 if child[pos] == '0':
                     neighbour[pos] = '1'
@@ -170,16 +169,11 @@ while gen < max_generation and unchange < max_unchange:
             kid[0] = fitness(kid[1], bits, xmin, xmax, ymin, ymax,)
         
         # Sort children
-        print sorted(children, reverse=True)[0]
-#        children.sort(reverse=True)
-#        for kid in children:
-#            print kid
+        children.sort(reverse=True)
 
     # Add best children to last position of population
-    specimens.append(sorted(children, reverse=True)[0])
-    for spec in specimens:
-        print spec
-
+    specimens.append(children[0])
+    
     # If child is better than worst individual, add it to population
     if specimens[-1][0] >= specimens[-2][0]:
         specimens = sorted(specimens, reverse=True)[:pop_size]
