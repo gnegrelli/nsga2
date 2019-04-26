@@ -1,4 +1,5 @@
 import numpy as np
+import copy
 
 
 # Function that evaluates fitness of a given individual
@@ -148,13 +149,36 @@ while gen < max_generation and unchange < max_unchange:
         # print "Post-mutation:\t", ''.join(child)
 
         if local_search:
-            print 'Yeah'
+            # Convert original child from binary to int
+            children = [[0, (int('0b' + ''.join(child[:bits]), 2), int('0b' + ''.join(child[bits:]), 2))]]
+            # Random generate slots to perform local change            
+            houses = np.random.choice(len(child), 0.1*len(child))
+            # Perform local changes on original child
+            for pos in houses:
+                print pos
+                neighbour = copy.copy(child)
+                if child[pos] == '0':
+                    neighbour[pos] = '1'
+                else:
+                    neighbour[pos] = '0'
+                
+                # Convert modified child from binary to int and save it into list of children
+                children.append([0, (int('0b' + ''.join(neighbour[:bits]), 2), int('0b' + ''.join(neighbour[bits:]), 2))])
+        
+        # Calculate fitness function for every children
+        for kid in children:
+            kid[0] = fitness(kid[1], bits, xmin, xmax, ymin, ymax,)
+        
+        # Sort children
+        print sorted(children, reverse=True)[0]
+#        children.sort(reverse=True)
+#        for kid in children:
+#            print kid
 
-        # Convert child from binary to int
-        child = (int('0b' + ''.join(child[:bits]), 2), int('0b' + ''.join(child[bits:]), 2))
-
-    # Add child to last position of population
-    specimens.append([fitness(child, bits, xmin, xmax, ymin, ymax,), child])
+    # Add best children to last position of population
+    specimens.append(sorted(children, reverse=True)[0])
+    for spec in specimens:
+        print spec
 
     # If child is better than worst individual, add it to population
     if specimens[-1][0] >= specimens[-2][0]:
