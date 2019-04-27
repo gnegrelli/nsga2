@@ -15,7 +15,7 @@ def fitness(crom, n, bound):
 
 # Flags
 print_gen = False
-local_search = not True
+local_search = True
 
 # Limits of x
 xmin = -1
@@ -32,7 +32,7 @@ boundaries = (max(xmin, 2 - ymax), min(xmax, 2 - ymin))
 pop_size = 100
 
 # Maximum number of generations
-max_generation = 1000
+max_generation = 1
 
 # Maximum number of consecutive generations with no change in population
 max_unchange = max(3, int(.02*max_generation))
@@ -167,7 +167,7 @@ while gen < max_generation and unchange < max_unchange:
         
         # Calculate fitness function for every children
         for kid in children:
-            kid[0] = fitness(kid[1], bits, xmin, xmax, ymin, ymax)
+            kid[0] = fitness(kid[1], bits, boundaries)
         
         # Sort children
         children.sort(reverse=True)
@@ -196,5 +196,8 @@ while gen < max_generation and unchange < max_unchange:
                 print "%d: %.4f, %.4f" % (specimens.index(spec) + 1, spec[1][0]/(2.**bits)*(xmax-xmin) + xmin, spec[1][1]/(2.**bits)*(ymax-ymin) + ymin)
         print "\n\n"
 
-print "Best value: %.4f, %.4f" % (specimens[0][1][0]/(2.**bits)*(xmax - xmin) + xmin, specimens[0][1][1]/(2.**bits)*(ymax - ymin) + ymin)
+xbest = specimens[0][1]/(2.**bits)*(boundaries[1] - boundaries[0]) + boundaries[0]
+ybest = 2 - xbest
+
+print "Best value: %.4f, %.4f" % (xbest, ybest)
 print "Objective function: %.6f" % specimens[0][0]
