@@ -25,6 +25,9 @@ xmax = 2
 ymin = -.5
 ymax = 1.8
 
+boundaries = (max(xmin, 2 - ymax), min(xmax, 2 - ymin))
+print boundaries
+
 # Size of population
 pop_size = 100
 
