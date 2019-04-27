@@ -3,14 +3,14 @@ import copy
 
 
 # Function that evaluates fitness of a given individual
-def fitness(crom, n, x1_l, x1_h, x2_l, x2_h):
+def fitness(crom, n, bound):
 
     import numpy as np
 
-    x1 = (crom[0]/(2.**n))*(x1_h - x1_l) + x1_l
-    x2 = (crom[1]/(2.**n))*(x2_h - x2_l) + x2_l
-
-    return x1*np.sin(10*np.pi*x1) + x2*np.cos(3*np.pi*(x2**2))
+    x1 = (crom/(2.**n))*(bound[1] - bound[0]) + bound[0]
+    #x2 = (crom[1]/(2.**n))*(x2_h - x2_l) + x2_l
+    print x1
+    return None
 
 
 # Flags
@@ -25,8 +25,8 @@ xmax = 2
 ymin = -.5
 ymax = 1.8
 
+# Boundaries for x
 boundaries = (max(xmin, 2 - ymax), min(xmax, 2 - ymin))
-print boundaries
 
 # Size of population
 pop_size = 100
@@ -61,19 +61,17 @@ specimens = []
 # Creating initial population with unique individuals
 for i in range(pop_size):
     a = np.random.randint(2**bits)
-    b = np.random.randint(2**bits)
 
     # This loop prevents creating repeated individuals
-    while [0, (a, b)] in specimens:
+    while [0, a] in specimens:
         a = np.random.randint(2**bits)
-        b = np.random.randint(2**bits)
 
     # Add new individual to population
-    specimens.append([0, (a, b)])
+    specimens.append([0, a])
 
 # Fitness calculation
 for spec in specimens:
-    spec[0] = fitness(spec[1], bits, xmin, xmax, ymin, ymax,)
+    spec[0] = fitness(spec[1], bits, boundaries)
 
 # Sorting specimens for best to worst
 specimens.sort(reverse=True)
