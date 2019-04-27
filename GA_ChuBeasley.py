@@ -14,7 +14,7 @@ def fitness(crom, n, bound):
 
 
 # Flags
-print_gen = False
+print_gen = not False
 local_search = True
 
 # Limits of x
@@ -32,7 +32,7 @@ boundaries = (max(xmin, 2 - ymax), min(xmax, 2 - ymin))
 pop_size = 100
 
 # Maximum number of generations
-max_generation = 1
+max_generation = 1000
 
 # Maximum number of consecutive generations with no change in population
 max_unchange = max(3, int(.02*max_generation))
@@ -80,7 +80,7 @@ if print_gen:
     print "Initial Generation"
     print 30*"-"
     for spec in specimens:
-        print "%d: %s" % (specimens.index(spec) + 1, spec[1])
+        print "%d: %.4f, %.4f" % (specimens.index(spec) + 1, spec[1]/(2.**bits)*(boundaries[1] - boundaries[0]) + boundaries[0], 2 - (spec[1]/(2.**bits)*(boundaries[1] - boundaries[0]) + boundaries[0]))
     print "\n\n"
 
 while gen < max_generation and unchange < max_unchange:
@@ -136,7 +136,7 @@ while gen < max_generation and unchange < max_unchange:
             "DEU PAU!!!!!"
             exit()
 
-        print "Pre-mutation:\t", ''.join(child)
+        # print "Pre-mutation:\t", ''.join(child)
 
         # Mutation
         for i in range(len(child)):
@@ -146,7 +146,7 @@ while gen < max_generation and unchange < max_unchange:
                 else:
                     child[i] = '0'
 
-        print "Post-mutation:\t", ''.join(child)
+        # print "Post-mutation:\t", ''.join(child)
         
         # Convert original child from binary to int
         children = [[0, int('0b' + ''.join(child[:bits]), 2)]]
@@ -191,9 +191,9 @@ while gen < max_generation and unchange < max_unchange:
         print 30*"-"
         for spec in specimens:
             if spec[1] == child:
-                print "\x1b[;32;49m%d: %.4f, %.4f \x1b[0m" % (specimens.index(spec) + 1, spec[1][0]/(2.**bits)*(xmax-xmin) + xmin, spec[1][1]/(2.**bits)*(ymax-ymin) + ymin)
+                print "\x1b[;32;49m%d: %.4f, %.4f \x1b[0m" % (specimens.index(spec) + 1, spec[1]/(2.**bits)*(boundaries[1] - boundaries[0]) + boundaries[0], 2 - (spec[1]/(2.**bits)*(boundaries[1] - boundaries[0]) + boundaries[0]))
             else:
-                print "%d: %.4f, %.4f" % (specimens.index(spec) + 1, spec[1][0]/(2.**bits)*(xmax-xmin) + xmin, spec[1][1]/(2.**bits)*(ymax-ymin) + ymin)
+                print "%d: %.4f, %.4f" % (specimens.index(spec) + 1, spec[1]/(2.**bits)*(boundaries[1] - boundaries[0]) + boundaries[0], 2 - (spec[1]/(2.**bits)*(boundaries[1] - boundaries[0]) + boundaries[0]))
         print "\n\n"
 
 xbest = specimens[0][1]/(2.**bits)*(boundaries[1] - boundaries[0]) + boundaries[0]
@@ -201,3 +201,4 @@ ybest = 2 - xbest
 
 print "Best value: %.4f, %.4f" % (xbest, ybest)
 print "Objective function: %.6f" % specimens[0][0]
+print gen, unchange
