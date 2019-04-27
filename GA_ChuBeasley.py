@@ -76,9 +76,6 @@ for spec in specimens:
 # Sorting specimens for best to worst
 specimens.sort(reverse=True)
 
-for spec in specimens:
-    print spec
-
 if print_gen:
     print "Initial Generation"
     print 30*"-"
@@ -120,8 +117,6 @@ while gen < max_generation and unchange < max_unchange:
                 parent.append(specimens[champion2][1])
         
         gene_p = [bin(parent[0])[2:].zfill(bits), bin(parent[1])[2:].zfill(bits)]
-        for gene in gene_p:
-            print gene
         
         # Crossover to generate original child
         if len(gene_p[0]) == len(gene_p[1]):
@@ -140,7 +135,7 @@ while gen < max_generation and unchange < max_unchange:
         else:
             "DEU PAU!!!!!"
             exit()
-        print ''.join(child)
+
         print "Pre-mutation:\t", ''.join(child)
 
         # Mutation
@@ -151,10 +146,10 @@ while gen < max_generation and unchange < max_unchange:
                 else:
                     child[i] = '0'
 
-        # print "Post-mutation:\t", ''.join(child)
+        print "Post-mutation:\t", ''.join(child)
         
         # Convert original child from binary to int
-        children = [[0, (int('0b' + ''.join(child[:bits]), 2), int('0b' + ''.join(child[bits:]), 2))]]        
+        children = [[0, int('0b' + ''.join(child[:bits]), 2)]]
         
         if local_search:            
             # Random generate slots to perform local change            
@@ -168,7 +163,7 @@ while gen < max_generation and unchange < max_unchange:
                     neighbour[pos] = '0'
                 
                 # Convert modified child from binary to int and save it into list of children
-                children.append([0, (int('0b' + ''.join(neighbour[:bits]), 2), int('0b' + ''.join(neighbour[bits:]), 2))])
+                children.append([0, int('0b' + ''.join(neighbour[:bits]), 2)])
         
         # Calculate fitness function for every children
         for kid in children:
