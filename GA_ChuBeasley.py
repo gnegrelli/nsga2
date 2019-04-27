@@ -7,10 +7,12 @@ def fitness(crom, n, bound):
 
     import numpy as np
 
-    x1 = (crom/(2.**n))*(bound[1] - bound[0]) + bound[0]
-    #x2 = (crom[1]/(2.**n))*(x2_h - x2_l) + x2_l
-    print x1
-    return None
+    x = (crom/(2.**n))*(bound[1] - bound[0]) + bound[0]
+    y = 2 - x
+    
+    print x, y
+
+    return x*np.sin(10*np.pi*x) + y*np.cos(3*np.pi*(y**2))
 
 
 # Flags
