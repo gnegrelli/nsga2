@@ -9,8 +9,6 @@ def fitness(crom, n, bound):
 
     x = (crom/(2.**n))*(bound[1] - bound[0]) + bound[0]
     y = 2 - x
-    
-    print x, y
 
     return x*np.sin(10*np.pi*x) + y*np.cos(3*np.pi*(y**2))
 
@@ -78,6 +76,9 @@ for spec in specimens:
 # Sorting specimens for best to worst
 specimens.sort(reverse=True)
 
+for spec in specimens:
+    print spec
+
 if print_gen:
     print "Initial Generation"
     print 30*"-"
@@ -117,10 +118,9 @@ while gen < max_generation and unchange < max_unchange:
                 parent.append(specimens[champion1][1])
             else:
                 parent.append(specimens[champion2][1])
-
-        gene_p = [bin(parent[0][0])[2:].zfill(bits) + bin(parent[0][1])[2:].zfill(bits),
-                  bin(parent[1][0])[2:].zfill(bits) + bin(parent[1][1])[2:].zfill(bits)]
-
+        
+        gene_p = [bin(parent[0])[2:].zfill(bits), bin(parent[1])[2:].zfill(bits)]
+        print gene_p
         # Crossover to generate original child
         if len(gene_p[0]) == len(gene_p[1]):
             
