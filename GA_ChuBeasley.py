@@ -14,12 +14,12 @@ def fitness(crom, n, bound):
 
 
 # Flags
-print_gen = not False
+print_gen = False
 local_search = True
 
 # Limits of x
-xmin = -1
-xmax = 2
+xmin = -1.
+xmax = 2.
 
 # Limits of y
 ymin = -.5
@@ -153,7 +153,7 @@ while gen < max_generation and unchange < max_unchange:
         
         if local_search:            
             # Random generate slots to perform local change            
-            houses = np.random.choice(len(child), 0.1*len(child))
+            houses = np.random.choice(len(child), int(0.1*len(child)))
             # Perform local changes on original child
             for pos in houses:
                 neighbour = copy.copy(child)
@@ -199,6 +199,8 @@ while gen < max_generation and unchange < max_unchange:
 xbest = specimens[0][1]/(2.**bits)*(boundaries[1] - boundaries[0]) + boundaries[0]
 ybest = 2 - xbest
 
-print "Best value: %.4f, %.4f" % (xbest, ybest)
-print "Objective function: %.6f" % specimens[0][0]
-print gen, unchange
+# print "Best value: %.6f, %.6f" % (xbest, ybest)
+# print "Objective function: %.6f" % specimens[0][0]
+# print gen, unchange
+
+print "%.6f, %.6f, %.6f" % (xbest, ybest, specimens[0][0])
