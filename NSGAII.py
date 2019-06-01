@@ -10,7 +10,7 @@ def fitness(crom, n, x1_l, x1_h, x2_l, x2_h):
     x1 = (crom[0]/(2.**n))*(x1_h - x1_l) + x1_l
     x2 = (crom[1]/(2.**n))*(x2_h - x2_l) + x2_l
 
-    # return (x1*np.sin(10*np.pi*x1) + x2*np.cos(3*np.pi*(x2**2)), x1**3 + x2**2)
+    # return x1*np.sin(10*np.pi*x1) + x2*np.cos(3*np.pi*(x2**2)), x1**3 + x2**2
     return x1*np.sin(10*np.pi*x1) + x2*np.cos(3*np.pi*(x2**2))
 
 
@@ -73,7 +73,7 @@ for i in range(pop_size):
 for spec in specimens:
     spec[0] = fitness(spec[1], bits, xmin, xmax, ymin, ymax,)
 
-# Sorting specimens for best to worst
+# Sorting specimens from best to worst
 specimens.sort(reverse=True)
 
 if print_gen:
@@ -89,7 +89,7 @@ while gen < max_generation and unchange < max_unchange:
     children = [[0, specimens[0][1]]]
 
     # This loop prevents parents to generate a child that already exists on the population
-    while children[0][1] in zip(*specimens)[1]:
+    while children[0][1] in [x[1] for x in specimens]:
 
         # List of selected parents
         parent = []
