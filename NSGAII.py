@@ -10,6 +10,7 @@ def fitness(crom, n, x1_l, x1_h, x2_l, x2_h):
     x1 = (crom[0]/(2.**n))*(x1_h - x1_l) + x1_l
     x2 = (crom[1]/(2.**n))*(x2_h - x2_l) + x2_l
 
+    # return (x1*np.sin(10*np.pi*x1) + x2*np.cos(3*np.pi*(x2**2)), x1**3 + x2**2)
     return x1*np.sin(10*np.pi*x1) + x2*np.cos(3*np.pi*(x2**2))
 
 
@@ -76,11 +77,11 @@ for spec in specimens:
 specimens.sort(reverse=True)
 
 if print_gen:
-    print "Initial Generation"
-    print 30*"-"
+    print("Initial Generation")
+    print(30*"-")
     for spec in specimens:
-        print "%d: %s" % (specimens.index(spec) + 1, spec[1])
-    print "\n\n"
+        print("%d: %s" % (specimens.index(spec) + 1, spec[1]))
+    print("\n\n")
 
 while gen < max_generation and unchange < max_unchange:
 
@@ -187,14 +188,14 @@ while gen < max_generation and unchange < max_unchange:
     gen += 1
 
     if print_gen:
-        print "Generation #%d" % gen
-        print 30*"-"
+        print("Generation #%d" % gen)
+        print(30*"-")
         for spec in specimens:
             if spec[1] == child:
-                print "\x1b[;32;49m%d: %.4f, %.4f \x1b[0m" % (specimens.index(spec) + 1, spec[1][0]/(2.**bits)*(xmax-xmin) + xmin, spec[1][1]/(2.**bits)*(ymax-ymin) + ymin)
+                print("\x1b[;32;49m%d: %.4f, %.4f \x1b[0m" % (specimens.index(spec) + 1, spec[1][0]/(2.**bits)*(xmax-xmin) + xmin, spec[1][1]/(2.**bits)*(ymax-ymin) + ymin))
             else:
-                print "%d: %.4f, %.4f" % (specimens.index(spec) + 1, spec[1][0]/(2.**bits)*(xmax-xmin) + xmin, spec[1][1]/(2.**bits)*(ymax-ymin) + ymin)
-        print "\n\n"
+                print("%d: %.4f, %.4f" % (specimens.index(spec) + 1, spec[1][0]/(2.**bits)*(xmax-xmin) + xmin, spec[1][1]/(2.**bits)*(ymax-ymin) + ymin))
+        print("\n\n")
 
-print "Best value: %.4f, %.4f" % (specimens[0][1][0]/(2.**bits)*(xmax - xmin) + xmin, specimens[0][1][1]/(2.**bits)*(ymax - ymin) + ymin)
-print "Objective function: %.6f" % specimens[0][0]
+print("Best value: %.4f, %.4f" % (specimens[0][1][0]/(2.**bits)*(xmax - xmin) + xmin, specimens[0][1][1]/(2.**bits)*(ymax - ymin) + ymin))
+print("Objective function: %.6f" % specimens[0][0])
