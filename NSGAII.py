@@ -1,5 +1,6 @@
 import numpy as np
 import copy
+import matplotlib.pyplot as plt
 
 
 # Function that evaluates fitness of a given individual
@@ -27,7 +28,7 @@ ymin = -.5
 ymax = 1.8
 
 # Size of population
-pop_size = 100
+pop_size = 10
 
 # Maximum number of generations
 max_generation = 1000
@@ -75,6 +76,10 @@ for spec in specimens:
 
 # Sorting specimens from best to worst
 specimens.sort(reverse=True)
+
+# Plot f1 versus f2 of every individual
+plt.scatter([x[1] for x in specimens], [x[2] for x in specimens])
+plt.show()
 
 for spec in specimens:
     print(spec)
