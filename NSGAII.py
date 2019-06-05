@@ -28,7 +28,7 @@ ymin = -.5
 ymax = 1.8
 
 # Size of population
-pop_size = 10
+pop_size = 30
 
 # Maximum number of generations
 max_generation = 1000
@@ -77,11 +77,31 @@ for spec in specimens:
 # Sorting specimens from best to worst
 specimens.sort(reverse=True)
 
-f2 = np.array([x[2] for x in specimens])
-for i in range(len(specimens)):
-    G = (f2 > f2[i])
-    if np.all(G[:i]):
-        specimens[i][0] = 0
+aux_specimens = []
+tier = 0
+
+while specimens:
+
+    f2 = np.array([x[2] for x in specimens])
+    for i in range(len(specimens)):
+        G = (f2 > f2[i])
+        if np.all(G[:i]):
+            specimens[i][0] = tier
+            aux_specimens.append(specimens[i])
+
+    tier += 1
+
+    plt.scatter([x[1] for x in specimens], [x[2] for x in specimens])
+
+    for i in range(len(specimens) - 1, -1, -1):
+        if specimens[i] in aux_specimens:
+            specimens.remove(specimens[i])
+
+for a in aux_specimens:
+    print(a)
+print(30*"~")
+for spec in specimens:
+    print(spec)
 
 # Plot f1 versus f2 of every individual
 plt.scatter([x[1] for x in specimens], [x[2] for x in specimens])
