@@ -63,12 +63,12 @@ for i in range(pop_size):
     b = np.random.randint(2**bits)
 
     # This loop prevents creating repeated individuals
-    while [0, 0, 0, (a, b)] in specimens:
+    while [-1, 0, 0, (a, b)] in specimens:
         a = np.random.randint(2**bits)
         b = np.random.randint(2**bits)
 
     # Add new individual to population
-    specimens.append([0, 0, 0, (a, b)])
+    specimens.append([-1, 0, 0, (a, b)])
 
 # Fitness calculation
 for spec in specimens:
@@ -77,12 +77,15 @@ for spec in specimens:
 # Sorting specimens from best to worst
 specimens.sort(reverse=True)
 
+f2 = np.array([x[2] for x in specimens])
+for i in range(len(specimens)):
+    G = (f2 > f2[i])
+    if np.all(G[:i]):
+        specimens[i][0] = 0
+
 # Plot f1 versus f2 of every individual
 plt.scatter([x[1] for x in specimens], [x[2] for x in specimens])
 plt.show()
-
-for spec in specimens:
-    print(spec)
 
 if print_gen:
     print("Initial Generation")
