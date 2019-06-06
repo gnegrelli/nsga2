@@ -16,7 +16,7 @@ def fitness(crom, n, x1_l, x1_h, x2_l, x2_h):
 
 
 # Flags
-print_gen = False
+print_gen = not False
 local_search = not True
 
 # Limits of x
@@ -97,21 +97,18 @@ while specimens:
         if specimens[i] in aux_specimens:
             specimens.remove(specimens[i])
 
-for a in aux_specimens:
-    print(a)
-print(30*"~")
-for spec in specimens:
-    print(spec)
-
 # Plot f1 versus f2 of every individual
 plt.scatter([x[1] for x in specimens], [x[2] for x in specimens])
 plt.show()
+
+# Copy specimens ranked in tiers and organized
+specimens = aux_specimens
 
 if print_gen:
     print("Initial Generation")
     print(30*"-")
     for spec in specimens:
-        print("%d: %s" % (specimens.index(spec) + 1, spec[1]))
+        print("%d: %s" % (specimens.index(spec) + 1, spec[3]))
     print("\n\n")
 
 while gen < max_generation and unchange < max_unchange:
