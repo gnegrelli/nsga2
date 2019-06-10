@@ -183,8 +183,6 @@ while gen < max_generation and unchange < max_unchange:
         # Evaluate children fitness
         child[1], child[2] = fitness(child[3], bits, xmin, xmax, ymin, ymax)
 
-        print(child)
-
         """
         if local_search:
             # Random generate slots to perform local change
@@ -203,6 +201,36 @@ while gen < max_generation and unchange < max_unchange:
 
         # Add child to last position of population
         specimens.append(child)
+
+    # Reset all tiers and sort population
+    for spec in specimens:
+        spec[0] = -1
+
+    specimens.sort(reverse=True)
+
+    aux_specimens = []
+    tier = 0
+
+    while specimens:
+
+        f2 = np.array([x[2] for x in specimens])
+        for i in range(len(specimens)):
+            G = (f2 > f2[i])
+            if np.all(G[:i]):
+                specimens[i][0] = tier
+                aux_specimens.append(specimens[i])
+
+        tier += 1
+
+        plt.scatter([x[1] for x in specimens], [x[2] for x in specimens])
+
+        for i in range(len(specimens) - 1, -1, -1):
+            if specimens[i] in aux_specimens:
+                specimens.remove(specimens[i])
+
+    # Plot f1 versus f2 of every individual
+    plt.scatter([x[1] for x in specimens], [x[2] for x in specimens])
+    plt.show()
 
     # Add best children to last position of population
     specimens.append(children[0])
