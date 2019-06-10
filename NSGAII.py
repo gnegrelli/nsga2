@@ -43,7 +43,7 @@ digits = 6
 mutax = 0.1
 
 # Crossover tax
-crosstax = 0.1
+crosstax = 0.7
 
 # Number of bits needed
 bits = int(np.ceil(np.log2(10**digits)))
@@ -165,7 +165,7 @@ while gen < max_generation and unchange < max_unchange:
             "DEU PAU!!!!!"
             exit()
 
-        # print "Pre-mutation:\t", ''.join(child)
+        # print("Pre-mutation:\t", ''.join(child))
 
         # Mutation
         for i in range(len(child)):
@@ -175,12 +175,17 @@ while gen < max_generation and unchange < max_unchange:
                 else:
                     child[i] = '0'
 
-        # print "Post-mutation:\t", ''.join(child)
+        # print("Post-mutation:\t", ''.join(child))
         
         # Convert original child from binary to int
-        children = [[0, (int('0b' + ''.join(child[:bits]), 2), int('0b' + ''.join(child[bits:]), 2))]]        
-        
-        if local_search:            
+        child = [-1, 0, 0, (int('0b' + ''.join(child[:bits]), 2), int('0b' + ''.join(child[bits:]), 2))]
+
+        # Evaluate children fitness
+        child[1], child[2] = fitness(child[3], bits, xmin, xmax, ymin, ymax)
+
+        print(child)
+
+        if local_search:
             # Random generate slots to perform local change
             houses = np.random.choice(len(child), 0.1*len(child))
             # Perform local changes on original child
