@@ -12,11 +12,10 @@ def fitness(crom, n, x1_l, x1_h, x2_l, x2_h):
     x2 = (crom[1]/(2.**n))*(x2_h - x2_l) + x2_l
 
     return x1*np.sin(10*np.pi*x1) + x2*np.cos(3*np.pi*(x2**2)), x1**3 + x2**2
-    # return x1*np.sin(10*np.pi*x1) + x2*np.cos(3*np.pi*(x2**2))
 
 
 # Flags
-print_gen = False
+print_gen = True
 local_search = not True
 
 # Limits of x
@@ -68,7 +67,7 @@ for i in range(pop_size):
         b = np.random.randint(2**bits)
 
     # Add new individual to population
-    specimens.append([-1, 0, 0, (a, b)])
+    specimens.append([-1, 0, 0, (a, b), (99999, 99999)])
 
 # Fitness calculation
 for spec in specimens:
@@ -111,12 +110,17 @@ if print_gen:
         print("%d: %s" % (specimens.index(spec) + 1, spec[3]))
     print("\n\n")
 
+for i in range(len(specimens) - 1):
+    if specimens[i - 1][0] == specimens[i][0] and specimens[i + 1][0] == specimens[i][0]:
+        # specimens[i][4] = (min
+        print(np.sqrt((specimens[i + 1][1] - specimens[i][1])**2 + (specimens[i + 1][2] - specimens[i][2])**2))
+
+for spec in specimens:
+    print(spec)
+
 while gen < max_generation and unchange < max_unchange:
 
-    # Initiate children as one specimen that already exists, forcing code to enter the following 'while' loop
-    children = [[0, specimens[0][1]]]
-
-    # This loop prevents parents to generate a child that already exists on the population
+    # In this loop, pairs of parents are selected to generate children, doubling the population
     while len(specimens) < 2*pop_size:
 
         # List of selected parents
@@ -127,11 +131,11 @@ while gen < max_generation and unchange < max_unchange:
 
             # Choosing champions to duel. The while loop prevents to choose the same champion twice
             champion1 = np.random.randint(pop_size)
-            while champion1 in parent:
+            while specimens[champion1][3] in parent:
                 champion1 = np.random.randint(pop_size)
 
             champion2 = np.random.randint(pop_size)
-            while champion2 == champion1 or champion2 in parent:
+            while champion2 == champion1 or specimens[champion2][3] in parent:
                 champion2 = np.random.randint(pop_size)
 
             # Tournament
@@ -231,17 +235,6 @@ while gen < max_generation and unchange < max_unchange:
     # Plot f1 versus f2 of every individual
     plt.scatter([x[1] for x in specimens], [x[2] for x in specimens])
     plt.show()
-
-    # Add best children to last position of population
-    specimens.append(children[0])
-    
-    # If child is better than worst individual, add it to population
-    if specimens[-1][0] >= specimens[-2][0]:
-        specimens = sorted(specimens, reverse=True)[:pop_size]
-        unchange = 0
-    else:
-        specimens = specimens[:pop_size]
-        unchange += 1
 
     # Add counter of generations
     gen += 1
