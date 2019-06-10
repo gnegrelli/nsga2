@@ -16,7 +16,7 @@ def fitness(crom, n, x1_l, x1_h, x2_l, x2_h):
 
 
 # Flags
-print_gen = not False
+print_gen = False
 local_search = not True
 
 # Limits of x
@@ -117,7 +117,7 @@ while gen < max_generation and unchange < max_unchange:
     children = [[0, specimens[0][1]]]
 
     # This loop prevents parents to generate a child that already exists on the population
-    while children[0][1] in [x[1] for x in specimens]:
+    while len(specimens) < 2*pop_size:
 
         # List of selected parents
         parent = []
@@ -135,14 +135,14 @@ while gen < max_generation and unchange < max_unchange:
                 champion2 = np.random.randint(pop_size)
 
             # Tournament
-            if specimens[champion1][0] > specimens[champion2][0]:
-                parent.append(specimens[champion1][1])
-            elif specimens[champion2][0] > specimens[champion1][0]:
-                parent.append(specimens[champion2][1])
+            if specimens[champion1][1] > specimens[champion2][1] and specimens[champion1][2] < specimens[champion2][2]:
+                parent.append(specimens[champion1][3])
+            elif specimens[champion1][1] < specimens[champion2][1] and specimens[champion1][2] > specimens[champion2][2]:
+                parent.append(specimens[champion2][3])
             elif np.random.rand() >= 0.5:
-                parent.append(specimens[champion1][1])
+                parent.append(specimens[champion1][3])
             else:
-                parent.append(specimens[champion2][1])
+                parent.append(specimens[champion2][3])
 
         gene_p = [bin(parent[0][0])[2:].zfill(bits) + bin(parent[0][1])[2:].zfill(bits),
                   bin(parent[1][0])[2:].zfill(bits) + bin(parent[1][1])[2:].zfill(bits)]
@@ -181,7 +181,7 @@ while gen < max_generation and unchange < max_unchange:
         children = [[0, (int('0b' + ''.join(child[:bits]), 2), int('0b' + ''.join(child[bits:]), 2))]]        
         
         if local_search:            
-            # Random generate slots to perform local change            
+            # Random generate slots to perform local change
             houses = np.random.choice(len(child), 0.1*len(child))
             # Perform local changes on original child
             for pos in houses:
