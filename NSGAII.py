@@ -185,6 +185,7 @@ while gen < max_generation and unchange < max_unchange:
 
         print(child)
 
+        """
         if local_search:
             # Random generate slots to perform local change
             houses = np.random.choice(len(child), 0.1*len(child))
@@ -198,13 +199,10 @@ while gen < max_generation and unchange < max_unchange:
                 
                 # Convert modified child from binary to int and save it into list of children
                 children.append([0, (int('0b' + ''.join(neighbour[:bits]), 2), int('0b' + ''.join(neighbour[bits:]), 2))])
-        
-        # Calculate fitness function for every children
-        for kid in children:
-            kid[0] = fitness(kid[1], bits, xmin, xmax, ymin, ymax)
-        
-        # Sort children
-        children.sort(reverse=True)
+        """
+
+        # Add child to last position of population
+        specimens.append(child)
 
     # Add best children to last position of population
     specimens.append(children[0])
