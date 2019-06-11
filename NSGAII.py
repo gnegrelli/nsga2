@@ -135,23 +135,38 @@ while gen < max_generation and unchange < max_unchange:
         while len(parent) < 2:
 
             # Choosing champions to duel. The while loop prevents to choose the same champion twice
-            champion1 = np.random.randint(pop_size)
-            while specimens[champion1][3] in parent:
-                champion1 = np.random.randint(pop_size)
+            champ1 = np.random.randint(pop_size)
+            while specimens[champ1][3] in parent:
+                champ1 = np.random.randint(pop_size)
 
-            champion2 = np.random.randint(pop_size)
-            while champion2 == champion1 or specimens[champion2][3] in parent:
-                champion2 = np.random.randint(pop_size)
+            champ2 = np.random.randint(pop_size)
+            while champ2 == champ1 or specimens[champ2][3] in parent:
+                champ2 = np.random.randint(pop_size)
 
             # Tournament
-            if specimens[champion1][1] > specimens[champion2][1] and specimens[champion1][2] < specimens[champion2][2]:
-                parent.append(specimens[champion1][3])
-            elif specimens[champion1][1] < specimens[champion2][1] and specimens[champion1][2] > specimens[champion2][2]:
-                parent.append(specimens[champion2][3])
+            # Check dominance
+            if specimens[champ1][1] > specimens[champ2][1] and specimens[champ1][2] < specimens[champ2][2]:
+                parent.append(specimens[champ1][3])
+            elif specimens[champ1][1] < specimens[champ2][1] and specimens[champ1][2] > specimens[champ2][2]:
+                parent.append(specimens[champ2][3])
+
+            # Check smaller distance
+            elif specimens[champ1][4] > specimens[champ2][4]:
+                parent.append(specimens[champ1][3])
+            elif specimens[champ1][4] < specimens[champ2][4]:
+                parent.append(specimens[champ2][3])
+
+            # Check higher distance
+            elif specimens[champ1][5] > specimens[champ2][5]:
+                parent.append(specimens[champ1][3])
+            elif specimens[champ1][5] < specimens[champ2][5]:
+                parent.append(specimens[champ2][3])
+
+            # Random choice
             elif np.random.rand() >= 0.5:
-                parent.append(specimens[champion1][3])
+                parent.append(specimens[champ1][3])
             else:
-                parent.append(specimens[champion2][3])
+                parent.append(specimens[champ2][3])
 
         gene_p = [bin(parent[0][0])[2:].zfill(bits) + bin(parent[0][1])[2:].zfill(bits),
                   bin(parent[1][0])[2:].zfill(bits) + bin(parent[1][1])[2:].zfill(bits)]
