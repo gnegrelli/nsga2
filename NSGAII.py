@@ -1,5 +1,4 @@
 import numpy as np
-import copy
 import matplotlib.pyplot as plt
 
 
@@ -15,7 +14,7 @@ def fitness(crom, n, x1_l, x1_h, x2_l, x2_h):
 
 
 # Flags
-print_gen = True
+print_gen = not True
 local_search = not True
 
 # Limits of x
@@ -265,24 +264,28 @@ while gen < max_generation and unchange < max_unchange:
                          ((aux[i][2] - aux[i + 1][2]) / (aux[0][2] - aux[-1][2])) ** 2))
             aux[i][4], aux[i][5] = min(d), max(d)
 
-    for spec in specimens:
-        print(spec)
-
     # Add counter of generations
     gen += 1
+
+    new_pop = []
+
+    # Exclude bad individuals
+    for tiers in range(specimens[-1][0] + 1):
+        aux = [x for x in specimens if x[0] == tiers]
+        if len(new_pop) + len(aux) <= pop_size:
+            new_pop += aux
+        else:
+            new_pop += sorted(aux, key=lambda x: x[4], reverse=True)[:pop_size - len(new_pop)]
+            break
+
+    specimens = new_pop
 
     if print_gen:
         print("Generation #%d" % gen)
         print(30*"-")
         for spec in specimens:
-            if spec[1] == child:
-                print("\x1b[;32;49m%d: %.4f, %.4f \x1b[0m" % (specimens.index(spec) + 1, spec[1][0]/(2.**bits)*(xmax-xmin) + xmin, spec[1][1]/(2.**bits)*(ymax-ymin) + ymin))
-            else:
-                print("%d: %.4f, %.4f" % (specimens.index(spec) + 1, spec[1][0]/(2.**bits)*(xmax-xmin) + xmin, spec[1][1]/(2.**bits)*(ymax-ymin) + ymin))
+            print("%d: %s" % (specimens.index(spec) + 1, spec))
         print("\n\n")
-
-# print("Best value: %.4f, %.4f" % (specimens[0][1][0]/(2.**bits)*(xmax - xmin) + xmin, specimens[0][1][1]/(2.**bits)*(ymax - ymin) + ymin))
-# print("Objective function: %.6f" % specimens[0][0])
 
 # Plot f1 versus f2 of every individual
 plt.scatter([x[1] for x in specimens], [x[2] for x in specimens])
