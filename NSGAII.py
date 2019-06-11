@@ -15,7 +15,7 @@ def fitness(crom, n, x1_l, x1_h, x2_l, x2_h):
 
 
 # Flags
-print_gen = True
+print_gen = not True
 local_search = not True
 
 # Limits of x
@@ -67,7 +67,7 @@ for i in range(pop_size):
         b = np.random.randint(2**bits)
 
     # Add new individual to population
-    specimens.append([-1, 0, 0, (a, b), (99999, 99999)])
+    specimens.append([-1, 0, 0, (a, b), 99999])
 
 # Fitness calculation
 for spec in specimens:
@@ -110,10 +110,18 @@ if print_gen:
         print("%d: %s" % (specimens.index(spec) + 1, spec[3]))
     print("\n\n")
 
-for i in range(len(specimens) - 1):
-    if specimens[i - 1][0] == specimens[i][0] and specimens[i + 1][0] == specimens[i][0]:
-        # specimens[i][4] = (min
-        print(np.sqrt((specimens[i + 1][1] - specimens[i][1])**2 + (specimens[i + 1][2] - specimens[i][2])**2))
+# Calculate normalized crowding distance for each tier
+for tiers in range(specimens[-1][0] + 1):
+    aux = [x for x in specimens if x[0] == tiers]
+    # for a in aux:
+    #     print(a)
+    print(30 * "+")
+    for i in range(1, len(aux) - 1):
+        print(np.sqrt(((aux[i][1] - aux[i - 1][1])/(aux[0][1] - aux[-1][1]))**2 +
+                      ((aux[i][2] - aux[i - 1][2])/(aux[0][2] - aux[-1][2]))**2),
+              np.sqrt(((aux[i][1] - aux[i + 1][1])/(aux[0][1] - aux[-1][1]))**2 +
+                      ((aux[i][2] - aux[i + 1][2])/(aux[0][2] - aux[-1][2]))**2))
+    print(30 * "+")
 
 for spec in specimens:
     print(spec)
@@ -236,6 +244,9 @@ while gen < max_generation and unchange < max_unchange:
     plt.scatter([x[1] for x in specimens], [x[2] for x in specimens])
     plt.show()
 
+    # Copy specimens ranked in tiers and organized
+    specimens = aux_specimens
+
     # Add counter of generations
     gen += 1
 
@@ -249,5 +260,9 @@ while gen < max_generation and unchange < max_unchange:
                 print("%d: %.4f, %.4f" % (specimens.index(spec) + 1, spec[1][0]/(2.**bits)*(xmax-xmin) + xmin, spec[1][1]/(2.**bits)*(ymax-ymin) + ymin))
         print("\n\n")
 
-print("Best value: %.4f, %.4f" % (specimens[0][1][0]/(2.**bits)*(xmax - xmin) + xmin, specimens[0][1][1]/(2.**bits)*(ymax - ymin) + ymin))
-print("Objective function: %.6f" % specimens[0][0])
+# print("Best value: %.4f, %.4f" % (specimens[0][1][0]/(2.**bits)*(xmax - xmin) + xmin, specimens[0][1][1]/(2.**bits)*(ymax - ymin) + ymin))
+# print("Objective function: %.6f" % specimens[0][0])
+
+# Plot f1 versus f2 of every individual
+plt.scatter([x[1] for x in specimens], [x[2] for x in specimens])
+plt.show()
