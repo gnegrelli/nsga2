@@ -67,7 +67,7 @@ for i in range(pop_size):
         b = np.random.randint(2**bits)
 
     # Add new individual to population
-    specimens.append([-1, 0, 0, (a, b), 99999])
+    specimens.append([-1, 0, 0, (a, b), 99999, 99999])
 
 # Fitness calculation
 for spec in specimens:
@@ -113,15 +113,12 @@ if print_gen:
 # Calculate normalized crowding distance for each tier
 for tiers in range(specimens[-1][0] + 1):
     aux = [x for x in specimens if x[0] == tiers]
-    # for a in aux:
-    #     print(a)
-    print(30 * "+")
     for i in range(1, len(aux) - 1):
-        print(np.sqrt(((aux[i][1] - aux[i - 1][1])/(aux[0][1] - aux[-1][1]))**2 +
-                      ((aux[i][2] - aux[i - 1][2])/(aux[0][2] - aux[-1][2]))**2),
-              np.sqrt(((aux[i][1] - aux[i + 1][1])/(aux[0][1] - aux[-1][1]))**2 +
-                      ((aux[i][2] - aux[i + 1][2])/(aux[0][2] - aux[-1][2]))**2))
-    print(30 * "+")
+        d = (np.sqrt(((aux[i][1] - aux[i - 1][1])/(aux[0][1] - aux[-1][1]))**2 +
+                     ((aux[i][2] - aux[i - 1][2])/(aux[0][2] - aux[-1][2]))**2),
+             np.sqrt(((aux[i][1] - aux[i + 1][1])/(aux[0][1] - aux[-1][1]))**2 +
+                     ((aux[i][2] - aux[i + 1][2])/(aux[0][2] - aux[-1][2]))**2))
+        aux[i][4], aux[i][5] = min(d), max(d)
 
 for spec in specimens:
     print(spec)
