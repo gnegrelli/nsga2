@@ -15,7 +15,7 @@ def fitness(crom, n, x1_l, x1_h, x2_l, x2_h):
 
 
 # Flags
-print_gen = not True
+print_gen = True
 local_search = not True
 
 # Limits of x
@@ -79,6 +79,7 @@ specimens.sort(reverse=True)
 aux_specimens = []
 tier = 0
 
+# Ranking process
 while specimens:
 
     f2 = np.array([x[2] for x in specimens])
@@ -103,13 +104,6 @@ plt.show()
 # Copy specimens ranked in tiers and organized
 specimens = aux_specimens
 
-if print_gen:
-    print("Initial Generation")
-    print(30*"-")
-    for spec in specimens:
-        print("%d: %s" % (specimens.index(spec) + 1, spec[3]))
-    print("\n\n")
-
 # Calculate normalized crowding distance for each tier
 for tiers in range(specimens[-1][0] + 1):
     aux = [x for x in specimens if x[0] == tiers]
@@ -120,8 +114,12 @@ for tiers in range(specimens[-1][0] + 1):
                      ((aux[i][2] - aux[i + 1][2])/(aux[0][2] - aux[-1][2]))**2))
         aux[i][4], aux[i][5] = min(d), max(d)
 
-for spec in specimens:
-    print(spec)
+if print_gen:
+    print("Initial Generation")
+    print(30*"-")
+    for spec in specimens:
+        print("%d: %s" % (specimens.index(spec) + 1, spec))
+    print("\n\n")
 
 while gen < max_generation and unchange < max_unchange:
 
@@ -202,7 +200,7 @@ while gen < max_generation and unchange < max_unchange:
         # print("Post-mutation:\t", ''.join(child))
         
         # Convert original child from binary to int
-        child = [-1, 0, 0, (int('0b' + ''.join(child[:bits]), 2), int('0b' + ''.join(child[bits:]), 2))]
+        child = [-1, 0, 0, (int('0b' + ''.join(child[:bits]), 2), int('0b' + ''.join(child[bits:]), 2)),  99999, 99999]
 
         # Evaluate children fitness
         child[1], child[2] = fitness(child[3], bits, xmin, xmax, ymin, ymax)
@@ -235,6 +233,7 @@ while gen < max_generation and unchange < max_unchange:
     aux_specimens = []
     tier = 0
 
+    # Ranking process
     while specimens:
 
         f2 = np.array([x[2] for x in specimens])
@@ -246,18 +245,28 @@ while gen < max_generation and unchange < max_unchange:
 
         tier += 1
 
-        plt.scatter([x[1] for x in specimens], [x[2] for x in specimens])
-
         for i in range(len(specimens) - 1, -1, -1):
             if specimens[i] in aux_specimens:
                 specimens.remove(specimens[i])
 
-    # Plot f1 versus f2 of every individual
-    plt.scatter([x[1] for x in specimens], [x[2] for x in specimens])
-    plt.show()
-
     # Copy specimens ranked in tiers and organized
     specimens = aux_specimens
+
+    for spec in specimens:
+        spec[4], spec[5] = 99999, 99999
+
+    # Calculate normalized crowding distance for each tier
+    for tiers in range(specimens[-1][0] + 1):
+        aux = [x for x in specimens if x[0] == tiers]
+        for i in range(1, len(aux) - 1):
+            d = (np.sqrt(((aux[i][1] - aux[i - 1][1]) / (aux[0][1] - aux[-1][1])) ** 2 +
+                         ((aux[i][2] - aux[i - 1][2]) / (aux[0][2] - aux[-1][2])) ** 2),
+                 np.sqrt(((aux[i][1] - aux[i + 1][1]) / (aux[0][1] - aux[-1][1])) ** 2 +
+                         ((aux[i][2] - aux[i + 1][2]) / (aux[0][2] - aux[-1][2])) ** 2))
+            aux[i][4], aux[i][5] = min(d), max(d)
+
+    for spec in specimens:
+        print(spec)
 
     # Add counter of generations
     gen += 1
