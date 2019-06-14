@@ -26,7 +26,7 @@ ymin = -.5
 ymax = 1.8
 
 # Size of population
-pop_size = 30
+pop_size = 100
 
 # Maximum number of generations
 max_generation = 1000
@@ -90,18 +90,16 @@ while specimens:
 
     tier += 1
 
-    plt.scatter([x[1] for x in specimens], [x[2] for x in specimens])
-
     for i in range(len(specimens) - 1, -1, -1):
         if specimens[i] in aux_specimens:
             specimens.remove(specimens[i])
 
-# Plot f1 versus f2 of every individual
-plt.scatter([x[1] for x in specimens], [x[2] for x in specimens])
-plt.show()
-
 # Copy specimens ranked in tiers and organized
 specimens = aux_specimens
+
+# Plot f1 versus f2 of every individual
+plt.scatter([x[1] for x in specimens], [x[2] for x in specimens], label="1st population", marker=".")
+plt.show()
 
 # Calculate normalized crowding distance for each tier
 for tiers in range(specimens[-1][0] + 1):
@@ -287,6 +285,17 @@ while gen < max_generation and unchange < max_unchange:
             print("%d: %s" % (specimens.index(spec) + 1, spec))
         print("\n\n")
 
+    # if gen % 500 == 0:
+        # plt.scatter([x[1] for x in specimens], [x[2] for x in specimens], label="%dth generation" % gen)
+    # plt.pause(2)
+
 # Plot f1 versus f2 of every individual
-plt.scatter([x[1] for x in specimens], [x[2] for x in specimens])
+plt.scatter([x[1] for x in specimens], [x[2] for x in specimens], label="Final population", marker="*")
+plt.legend()
+plt.xlabel("f1")
+plt.ylabel("f2")
+
+for spec in specimens:
+    print(spec)
+
 plt.show()
